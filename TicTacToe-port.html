@@ -32,8 +32,25 @@
             position: relative;
         }
         .line{
-            position: absolute;
+            position: fixed;
+            border-radius: 10px;
+            width: 10px;
+            height: 10px;
             border: 1px solid rgb(194, 111, 111);
+            transform: rotate(45deg);
+            background-color: rgb(194, 111, 111);
+            animation-name: height;
+            animation-duration: 1s;
+        }
+
+        @keyframes width {
+            from {width: 0px;}
+            to {width: 450px;}
+        }
+
+        @keyframes height {
+            from {height: 0px;}
+            to {height: 450px;}
         }
 
         .grid{
@@ -46,12 +63,7 @@
             padding: 15px;
             transition: all 0.8s;
             transition-timing-function: ease-out;
-            /* content: url(./x-black.png); */
         }
-        /* .grid-item:hover{
-            background-color: rgb(206, 241, 249);
-            content: url(./o-white.png);
-        } */
 
         #item-0, #item-1, #item-3, #item-4{
             border-bottom: 2px solid rgb(206, 241, 249);
@@ -88,8 +100,8 @@
 </head>
 <body>
     <div class="title">TIC TAC TOE</div>
-    <div class="container">
-        <div class="line"></div>
+    <div class="container" id="cont">
+        <div class="line" id="lin"></div>
         <div class="grid">
             <div class="grid-item" id="item-0"></div>
             <div class="grid-item" id="item-1"></div>
@@ -112,6 +124,7 @@
     ];
     let currentPlayer = 0;
     let wonGame = false;
+    let line = document.createElement("div");
 
     document.getElementById("item-0").onclick = function() {
         checkMove("item-0", 0, 0);
@@ -223,26 +236,32 @@
         if(checkRes(0, 0, 0, 1, 0, 2)) {
             console.log(`${currentPlayer} won column 1`);
             wonGame = true;
+            gameComplete('width', '70', '0');
         }
         if(checkRes(1, 0, 1, 1, 1, 2)) {
             console.log(`${currentPlayer} won column 2`);
             wonGame = true;
+            gameComplete('width', '220', '0');
         }
         if(checkRes(2, 0, 2, 1, 2, 2)) {
             console.log(`${currentPlayer} won column 3`);
             wonGame = true;
+            gameComplete('width', '370', '0');
         }
         if(checkRes(0, 0, 1, 0, 2, 0)) {
             console.log(`${currentPlayer} won row 1`);
             wonGame = true;
+            gameComplete('height', '0', '70');
         }
         if(checkRes(0, 1, 1, 1, 2, 1)) {
             console.log(`${currentPlayer} won row 2`);
             wonGame = true;
+            gameComplete('height', '0', '220');
         }
         if(checkRes(0, 2, 1, 2, 2, 2)) {
             console.log(`${currentPlayer} won row 3`);
             wonGame = true;
+            gameComplete('height', '0', '370');
         }
         
         if(currentPlayer === 0){
@@ -259,9 +278,23 @@
         console.log(`wonGame ${wonGame}`);
         console.log(`------------------`);
     }
+    
+    function gameComplete(side, top, left){
+        // console.log("in gameComplete");
+        // line.setAttribute("id", "line");
+        // document.getElementById('cont').appendChild(line);
+        document.getElementById("lin").style.cssText = `
+            ${side}: 450px;
+            top: ${top}px;
+            left: ${left}px;
+            border: 1px solid rgb(194, 111, 111);
+            background-color: rgb(194, 111, 111);
+            animation-name: ${side};
+            animation-duration: 1s;
+            `;
+    }
 
     function checkRes(x1, y1, x2, y2, x3, y3){
-
         if(box[x1][y1] != -1 || box[x2][y2] != -1 || box[x3][y3] != -1){
             if (box[x1][y1] == box[x2][y2] && box[x1][y1]  == box[x3][y3]) {
                 console.log("" + box[x1][y1] + box[x2][y2] + box[x3][y3]);
@@ -278,6 +311,7 @@
             [-1, -1, -1]
         ];
         wonGame = false;
+        document.getElementById("lin").style.cssText = ``;
         document.getElementById("item-0").style.cssText = `background-color: none;
                                                            content: none;`;
         document.getElementById("item-1").style.cssText = `background-color: none;
